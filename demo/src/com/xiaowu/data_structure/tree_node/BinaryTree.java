@@ -76,40 +76,29 @@ public class BinaryTree<T extends Comparable> {
 
     public void insert(T data) {
         Node<T> node = new Node<>(data);
-        if (rootNode == null) {
-            rootNode = node;
-            return;
-        }
-        insert(rootNode, node);
+        rootNode = insert(rootNode, node);
     }
 
     public void remove(T data) {
         rootNode = remove(rootNode, data);
     }
 
-    public Node<T> remove(Node<T> node, T data) {
-        if (node == null) {
+    private Node<T> remove(Node<T> node, T data) {
+        if (node == null)
             return null;
-        }
         int compare = node.data.compareTo(data);
-        if (compare < 0) {
-            if (node.rightNode != null && node.rightNode.data.compareTo(data) == 0 && (node.rightNode.isLeaf() || (node.rightNode.leftNode == null || node.rightNode.rightNode == null))) {
-                node.rightNode = node.rightNode.isLeaf() ? null : (node.rightNode.leftNode == null ? node.rightNode.rightNode : node.rightNode.leftNode);
+        if (compare > 0){
+            node.leftNode = remove(node.leftNode,data);
+        } else if (compare < 0){
+            node.rightNode = remove(node.rightNode,data);
+        } else {
+            if (node.isLeaf()){
+                return null;
+            } else if (node.leftNode == null || node.rightNode == null){
+                node = (node.leftNode == null) ? node.rightNode : node.leftNode;
             } else {
-                remove(node.rightNode, data);
-            }
-        } else if (compare > 0) {
-            if (node.leftNode != null && node.leftNode.data.compareTo(data) == 0 && (node.leftNode.isLeaf() || (node.leftNode.leftNode == null || node.leftNode.rightNode == null))) {
-                node.leftNode = node.leftNode.isLeaf() ? null : (node.leftNode.leftNode == null ? node.leftNode.rightNode : node.leftNode.leftNode);
-            } else {
-                remove(node.leftNode, data);
-            }
-        } else if (node.rightNode != null && node.leftNode != null) {
-            node.data = findMin(node.rightNode).data;
-            if (node.rightNode != null && node.rightNode.data.compareTo(node.data) == 0 && (node.rightNode.isLeaf() || (node.rightNode.leftNode == null || node.rightNode.rightNode == null))) {
-                node.rightNode = node.rightNode.isLeaf() ? null : (node.rightNode.leftNode == null ? node.rightNode.rightNode : node.rightNode.leftNode);
-            } else {
-                remove(node.rightNode, node.data);
+                node.data = findMin(node.rightNode).data;
+                node.rightNode = remove(node.rightNode,node.data);
             }
         }
         return node;
@@ -157,24 +146,18 @@ public class BinaryTree<T extends Comparable> {
         }
     }
 
-    private void insert(Node parent, Node child) {
-        int compare = parent.comprate(child);
-        if (compare == 0) {
-            return;
-        }
-        if (compare > 0) {
-            if (parent.leftNode == null) {
-                parent.leftNode = child;
-                return;
-            }
-            insert(parent.leftNode, child);
+    private Node insert(Node parent, Node child) {
+        if (parent == null) {
+            parent = child;
         } else {
-            if (parent.rightNode == null) {
-                parent.rightNode = child;
-                return;
+            int compare = parent.comprate(child);
+            if (compare > 0){
+                parent.leftNode = insert(parent.leftNode,child);
+            } else {
+                parent.rightNode = insert(parent.rightNode, child);
             }
-            insert(parent.rightNode, child);
         }
+        return parent;
     }
 
     public void printTree() {

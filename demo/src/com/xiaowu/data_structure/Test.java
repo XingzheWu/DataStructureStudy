@@ -26,10 +26,10 @@ public class Test {
         tree.insert(1);
         tree.insert(50);
 
-//        tree.remove(21);
+        tree.remove(15);
 //        System.out.println(tree.preorderTraversal());
 //        System.out.println(tree.midOrderList());
 //        System.out.println(tree.postorderTraversal());
-        System.out.println(tree.getDepth());
+//        System.out.println(tree.getDepth());
     }
 }
