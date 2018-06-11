@@ -8,30 +8,30 @@ import java.util.List;
  * @date 2018/6/9/0010
  */
 public class BinaryTree<T extends Comparable> {
-    private Node<T> rootNode;
+    private Node<T> root;
 
     public BinaryTree() {
     }
 
     public BinaryTree(Node<T> rootNode) {
-        this.rootNode = rootNode;
+        this.root = rootNode;
     }
 
     public int getDepth(){
-        return getDepth(rootNode);
+        return getDepth(root);
     }
 
     private int getDepth(Node<T> rootNode) {
         if (rootNode == null)
             return 0;
-        int leftDepth = getDepth(rootNode.leftNode) + 1;
-        int rightDepth = getDepth(rootNode.rightNode) + 1;
+        int leftDepth = getDepth(rootNode.left) + 1;
+        int rightDepth = getDepth(rootNode.right) + 1;
         return Math.max(leftDepth,rightDepth);
     }
 
     public List<T> postorderTraversal(){
         List<T> list = new ArrayList<>();
-        postorderTraversal(rootNode,list);
+        postorderTraversal(root,list);
         return list;
     }
 
@@ -39,14 +39,14 @@ public class BinaryTree<T extends Comparable> {
         if (node == null) {
             return;
         }
-        postorderTraversal(node.leftNode,list);
-        postorderTraversal(node.rightNode,list);
-        list.add(node.data);
+        postorderTraversal(node.left,list);
+        postorderTraversal(node.right,list);
+        list.add(node.element);
     }
 
     public List<T> midOrderList(){
         List<T> list = new ArrayList<>();
-        midOrderList(rootNode,list);
+        midOrderList(root,list);
         return list;
     }
 
@@ -54,14 +54,14 @@ public class BinaryTree<T extends Comparable> {
         if (node == null) {
             return;
         }
-        midOrderList(node.leftNode,list);
-        list.add(node.data);
-        midOrderList(node.rightNode,list);
+        midOrderList(node.left,list);
+        list.add(node.element);
+        midOrderList(node.right,list);
     }
 
     public List<T> preorderTraversal(){
         List<T> list = new ArrayList<>();
-        preorderTraversal(rootNode,list);
+        preorderTraversal(root,list);
         return list;
     }
 
@@ -69,80 +69,80 @@ public class BinaryTree<T extends Comparable> {
         if (node == null) {
             return;
         }
-        list.add(node.data);
-        preorderTraversal(node.leftNode,list);
-        preorderTraversal(node.rightNode,list);
+        list.add(node.element);
+        preorderTraversal(node.left,list);
+        preorderTraversal(node.right,list);
     }
 
-    public void insert(T data) {
-        Node<T> node = new Node<>(data);
-        rootNode = insert(rootNode, node);
+    public void insert(T element) {
+        Node<T> node = new Node<>(element);
+        root = insert(root, node);
     }
 
-    public void remove(T data) {
-        rootNode = remove(rootNode, data);
+    public void remove(T element) {
+        root = remove(root, element);
     }
 
-    private Node<T> remove(Node<T> node, T data) {
+    private Node<T> remove(Node<T> node, T element) {
         if (node == null)
             return null;
-        int compare = node.data.compareTo(data);
+        int compare = node.element.compareTo(element);
         if (compare > 0){
-            node.leftNode = remove(node.leftNode,data);
+            node.left = remove(node.left,element);
         } else if (compare < 0){
-            node.rightNode = remove(node.rightNode,data);
+            node.right = remove(node.right,element);
         } else {
             if (node.isLeaf()){
                 return null;
-            } else if (node.leftNode == null || node.rightNode == null){
-                node = (node.leftNode == null) ? node.rightNode : node.leftNode;
+            } else if (node.left == null || node.right == null){
+                node = (node.left == null) ? node.right : node.left;
             } else {
-                node.data = findMin(node.rightNode).data;
-                node.rightNode = remove(node.rightNode,node.data);
+                node.element = findMin(node.right).element;
+                node.right = remove(node.right,node.element);
             }
         }
         return node;
     }
 
     public T findMin() {
-        return findMin(rootNode).data;
+        return findMin(root).element;
     }
 
     public T findMax() {
-        return findMax(rootNode).data;
+        return findMax(root).element;
     }
 
     private Node<T> findMin(Node<T> node) {
         if (node == null)
             return null;
-        if (node.leftNode == null) {
+        if (node.left == null) {
             return node;
         } else {
-            return findMin(node.leftNode);
+            return findMin(node.left);
         }
     }
 
     private Node<T> findMax(Node<T> node) {
         if (node == null)
             return null;
-        if (node.rightNode == null) {
+        if (node.right == null) {
             return node;
         } else {
-            return findMax(node.rightNode);
+            return findMax(node.right);
         }
     }
 
-    private Node findNode(Node node, T data) {
+    private Node findNode(Node node, T element) {
         if (node == null) {
             return null;
         }
-        int compare = node.data.compareTo(data);
+        int compare = node.element.compareTo(element);
         if (compare == 0) {
             return node;
         } else if (compare > 0) {
-            return findNode(node.leftNode, data);
+            return findNode(node.left, element);
         } else {
-            return findNode(node.rightNode, data);
+            return findNode(node.right, element);
         }
     }
 
@@ -152,9 +152,9 @@ public class BinaryTree<T extends Comparable> {
         } else {
             int compare = parent.comprate(child);
             if (compare > 0){
-                parent.leftNode = insert(parent.leftNode,child);
+                parent.left = insert(parent.left,child);
             } else {
-                parent.rightNode = insert(parent.rightNode, child);
+                parent.right = insert(parent.right, child);
             }
         }
         return parent;
@@ -165,32 +165,32 @@ public class BinaryTree<T extends Comparable> {
     }
 
     public boolean isEmpty() {
-        return rootNode == null;
+        return root == null;
     }
 
 
     public static class Node<T extends Comparable> {
         private int index;
-        private T data;
+        private T element;
         private boolean leaf;
 
         public boolean isLeaf() {
-            return leftNode == null && rightNode == null;
+            return left == null && right == null;
         }
 
-        private Node(T data) {
-            this.data = data;
+        private Node(T element) {
+            this.element = element;
         }
 
-        public Node<T> leftNode;
-        public Node<T> rightNode;
+        public Node<T> left;
+        public Node<T> right;
 
-        private T getData() {
-            return data;
+        private T getElement() {
+            return element;
         }
 
         private int comprate(Node<T> node) {
-            return data.compareTo(node.getData());
+            return element.compareTo(node.getElement());
         }
     }
 }
