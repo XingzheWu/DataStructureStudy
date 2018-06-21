@@ -1,4 +1,4 @@
-package com.xiaowu.data_structure.tree_node;
+package com.xiaowu.data_structure.binary_tree;
 
 import java.util.ArrayList;
 import java.util.List;

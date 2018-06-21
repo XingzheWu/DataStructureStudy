@@ -1,6 +1,6 @@
 package com.xiaowu.data_structure;
 
-import com.xiaowu.data_structure.tree_node.BinaryTree;
+import com.xiaowu.data_structure.binary_tree.BinaryTree;
 
 /**
  * @author xingzhe
